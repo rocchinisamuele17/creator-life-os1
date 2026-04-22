@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useApp } from "../../context/AppContext";
 import { StatCard } from "../../components/ui/StatCard";
-import { ProgressBar } from "../../components/ui/ProgressBar";
 import { FormField, SelectField, AddButton } from "../../components/ui/FormField";
 import type { MoneyEntry, MoneyExpense } from "../../types";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
@@ -93,7 +92,7 @@ export function MoneyTracker() {
                   outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 >
                   {Object.keys(byType).map((_, index) => {
                     const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'];
@@ -103,7 +102,7 @@ export function MoneyTracker() {
                 <Tooltip
                   contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff' }}
                   itemStyle={{ color: '#fff' }}
-                  formatter={(value: number) => `€${value}`}
+                  formatter={(value: any) => `€${value}`}
                 />
               </PieChart>
             </ResponsiveContainer>
