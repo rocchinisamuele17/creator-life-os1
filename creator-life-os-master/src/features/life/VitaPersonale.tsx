@@ -24,8 +24,10 @@ function getTodayKey() {
 
 export function VitaPersonale() {
   const { state, setState } = useApp();
-  const [showAdd, setShowAdd] = useState(false);
+  const [showAddHabit, setShowAddHabit] = useState(false);
   const [newHabit, setNewHabit] = useState("");
+  const [showAddRoutine, setShowAddRoutine] = useState(false);
+  const [routineForm, setRoutineForm] = useState({ time: "08:00", task: "" });
 
   const todayKey = getTodayKey();
   const todayJournal = state.journal.find((j) => j.date === todayKey) || {
@@ -69,12 +71,34 @@ export function VitaPersonale() {
       ],
     }));
     setNewHabit("");
-    setShowAdd(false);
+    setShowAddHabit(false);
   };
 
   const deleteHabit = (idx: number) => {
     setState((s) => ({ ...s, habits: s.habits.filter((_, i) => i !== idx) }));
   };
+
+  const addRoutineItem = () => {
+    if (!routineForm.time.trim() || !routineForm.task.trim()) return;
+    setState((s) => {
+      const current = s.routine || ROUTINE;
+      // Inseriamo e poi ordiniamo per orario per comodità!
+      const newRoutine = [...current, { time: routineForm.time, task: routineForm.task }]
+        .sort((a, b) => a.time.localeCompare(b.time));
+      return { ...s, routine: newRoutine };
+    });
+    setRoutineForm({ time: "08:00", task: "" });
+    setShowAddRoutine(false);
+  };
+
+  const deleteRoutineItem = (idx: number) => {
+    setState((s) => {
+      const current = s.routine || ROUTINE;
+      return { ...s, routine: current.filter((_, i) => i !== idx) };
+    });
+  };
+
+  const currentRoutine = state.routine || ROUTINE;
 
   const textareaStyle = {
     width: "100%",
@@ -118,10 +142,10 @@ export function VitaPersonale() {
           <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>
             Habit Tracker — Settimana Corrente
           </div>
-          <AddButton onClick={() => setShowAdd(!showAdd)} label="Abitudine" />
+          <AddButton onClick={() => setShowAddHabit(!showAddHabit)} label="Abitudine" />
         </div>
 
-        {showAdd && (
+        {showAddHabit && (
           <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
             <FormField
               label="Nuova Abitudine"
@@ -352,39 +376,105 @@ export function VitaPersonale() {
       >
         <div
           style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "rgba(255,255,255,0.7)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
             marginBottom: 12,
           }}
         >
-          ⏰ Routine Giornaliera
+          <div
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            ⏰ Routine Giornaliera
+          </div>
+          <AddButton onClick={() => setShowAddRoutine(!showAddRoutine)} label="Attività" />
         </div>
-        {ROUTINE.map((r, i) => (
+
+        {showAddRoutine && (
+          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+            <div style={{ width: 100 }}>
+              <FormField
+                label="Orario"
+                type="time"
+                value={routineForm.time}
+                onChange={(e) => setRoutineForm({ ...routineForm, time: e.target.value })}
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+               <FormField
+                label="Attività"
+                value={routineForm.task}
+                onChange={(e) => setRoutineForm({ ...routineForm, task: e.target.value })}
+                placeholder="Es. Palestra / Deep Work"
+                onKeyDown={(e) => e.key === "Enter" && addRoutineItem()}
+              />
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-end" }}>
+              <button
+                onClick={addRoutineItem}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 8,
+                  border: "none",
+                  background: "var(--accent-gradient)",
+                  color: "#000",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}
+              >
+                Aggiungi
+              </button>
+            </div>
+          </div>
+        )}
+
+        {currentRoutine.map((r, i) => (
           <div
             key={i}
             style={{
               display: "flex",
-              gap: 12,
+              justifyContent: "space-between",
+              alignItems: "center",
               padding: "7px 0",
               borderBottom:
-                i < ROUTINE.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
+                i < currentRoutine.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
             }}
           >
-            <span
+            <div style={{ display: "flex", gap: 12 }}>
+              <span
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#f97316",
+                  minWidth: 42,
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {r.time}
+              </span>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
+                {r.task}
+              </span>
+            </div>
+            <button
+              onClick={() => deleteRoutineItem(i)}
               style={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#f97316",
-                minWidth: 42,
-                fontVariantNumeric: "tabular-nums",
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.2)",
+                cursor: "pointer",
+                fontSize: 14,
+                padding: "2px 4px",
               }}
             >
-              {r.time}
-            </span>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-              {r.task}
-            </span>
+              ×
+            </button>
           </div>
         ))}
       </div>

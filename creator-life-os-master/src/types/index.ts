@@ -73,6 +73,11 @@ export interface SettingsState {
   theme: "cyan" | "orange" | "purple" | "green";
 }
 
+export interface RoutineItem {
+  time: string;
+  task: string;
+}
+
 export interface AppState {
   content: ContentItem[];
   entrate: MoneyEntry[];
@@ -83,4 +88,5 @@ export interface AppState {
   journal: JournalEntry[];
   reminders: Reminder[];
   settings: SettingsState;
+  routine?: RoutineItem[];
 }
