@@ -4,6 +4,7 @@ import { StatCard } from "../../components/ui/StatCard";
 import { ProgressBar } from "../../components/ui/ProgressBar";
 import { FormField, SelectField, AddButton } from "../../components/ui/FormField";
 import type { MoneyEntry, MoneyExpense } from "../../types";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 const ENTRY_TYPES = ["Prodotto", "Sponsorship", "Affiliazione", "Servizio", "Freelance"];
 const EXPENSE_CATEGORIES = ["Tool", "Infra", "Attrezzatura", "Marketing", "Formazione"];
@@ -12,8 +13,9 @@ export function MoneyTracker() {
   const { state, setState } = useApp();
   const [showEntrata, setShowEntrata] = useState(false);
   const [showSpesa, setShowSpesa] = useState(false);
-  const [entForm, setEntForm] = useState({ source: "", amount: "", type: ENTRY_TYPES[0] });
-  const [spForm, setSpForm] = useState({ item: "", amount: "", category: EXPENSE_CATEGORIES[0] });
+  const today = new Date().toISOString().split('T')[0];
+  const [entForm, setEntForm] = useState({ source: "", amount: "", type: ENTRY_TYPES[0], date: today });
+  const [spForm, setSpForm] = useState({ item: "", amount: "", category: EXPENSE_CATEGORIES[0], date: today });
 
   const totalIn = state.entrate.reduce((s, e) => s + e.amount, 0);
   const totalOut = state.spese.reduce((s, e) => s + e.amount, 0);
@@ -27,18 +29,18 @@ export function MoneyTracker() {
   const addEntrata = () => {
     const amount = parseFloat(entForm.amount);
     if (!entForm.source.trim() || isNaN(amount) || amount <= 0) return;
-    const entry: MoneyEntry = { source: entForm.source.trim(), amount, type: entForm.type };
+    const entry: MoneyEntry = { source: entForm.source.trim(), amount, type: entForm.type, date: entForm.date };
     setState((s) => ({ ...s, entrate: [...s.entrate, entry] }));
-    setEntForm({ source: "", amount: "", type: ENTRY_TYPES[0] });
+    setEntForm({ source: "", amount: "", type: ENTRY_TYPES[0], date: today });
     setShowEntrata(false);
   };
 
   const addSpesa = () => {
     const amount = parseFloat(spForm.amount);
     if (!spForm.item.trim() || isNaN(amount) || amount <= 0) return;
-    const expense: MoneyExpense = { item: spForm.item.trim(), amount, category: spForm.category };
+    const expense: MoneyExpense = { item: spForm.item.trim(), amount, category: spForm.category, date: spForm.date };
     setState((s) => ({ ...s, spese: [...s.spese, expense] }));
-    setSpForm({ item: "", amount: "", category: EXPENSE_CATEGORIES[0] });
+    setSpForm({ item: "", amount: "", category: EXPENSE_CATEGORIES[0], date: today });
     setShowSpesa(false);
   };
 
@@ -68,27 +70,45 @@ export function MoneyTracker() {
         />
       </div>
 
-      <div
-        style={{
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 12,
-          padding: 18,
-          marginBottom: 16,
-        }}
-      >
-        <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 14 }}>
-          Entrate per Tipo
-        </div>
-        {Object.entries(byType).map(([type, amount]) => (
-          <div key={type} style={{ marginBottom: 10 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{type}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "#10b981" }}>€{amount}</span>
-            </div>
-            <ProgressBar value={(amount / totalIn) * 100} color="#10b981" />
+      <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap" }}>
+        <div
+          className="glass-panel"
+          style={{
+            flex: 1,
+            minWidth: 300,
+            padding: 18,
+          }}
+        >
+          <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 14 }}>
+            Distribuzione Entrate (Pie Chart)
           </div>
-        ))}
+          <div style={{ height: 260, width: "100%" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={Object.entries(byType).map(([name, value]) => ({ name, value }))}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {Object.keys(byType).map((_, index) => {
+                    const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899'];
+                    return <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />;
+                  })}
+                </Pie>
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff' }}
+                  itemStyle={{ color: '#fff' }}
+                  formatter={(value: number) => `€${value}`}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Entrate */}
@@ -129,6 +149,12 @@ export function MoneyTracker() {
                 value={entForm.amount}
                 onChange={(e) => setEntForm({ ...entForm, amount: e.target.value })}
                 placeholder="0"
+              />
+              <FormField
+                label="Data"
+                type="date"
+                value={entForm.date}
+                onChange={(e) => setEntForm({ ...entForm, date: e.target.value })}
               />
               <SelectField
                 label="Tipo"
@@ -231,6 +257,12 @@ export function MoneyTracker() {
                 value={spForm.amount}
                 onChange={(e) => setSpForm({ ...spForm, amount: e.target.value })}
                 placeholder="0"
+              />
+              <FormField
+                label="Data"
+                type="date"
+                value={spForm.date}
+                onChange={(e) => setSpForm({ ...spForm, date: e.target.value })}
               />
               <SelectField
                 label="Categoria"

@@ -65,6 +65,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
     syncToSupabase(state);
   }, [state, syncToSupabase]);
 
+  // Gestione Tema (God-mode)
+  useEffect(() => {
+    const root = document.documentElement;
+    const theme = state.settings?.theme || "cyan";
+    
+    switch (theme) {
+      case "cyan":
+        root.style.setProperty("--accent-color", "#00f0ff");
+        root.style.setProperty("--accent-gradient", "linear-gradient(135deg, #00f0ff 0%, #7000ff 100%)");
+        break;
+      case "orange":
+        root.style.setProperty("--accent-color", "#ff7300");
+        root.style.setProperty("--accent-gradient", "linear-gradient(135deg, #ff7300 0%, #ff004c 100%)");
+        break;
+      case "purple":
+        root.style.setProperty("--accent-color", "#b026ff");
+        root.style.setProperty("--accent-gradient", "linear-gradient(135deg, #b026ff 0%, #3b00ff 100%)");
+        break;
+      case "green":
+        root.style.setProperty("--accent-color", "#00ff41");
+        root.style.setProperty("--accent-gradient", "linear-gradient(135deg, #00ff41 0%, #008f11 100%)");
+        break;
+    }
+  }, [state.settings?.theme]);
+
   return (
     <AppContext.Provider value={{ state, setState }}>
       {children}

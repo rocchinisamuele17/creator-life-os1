@@ -5,11 +5,9 @@ import type { TabId } from "./TabNav";
 import { Footer } from "./Footer";
 import { Dashboard } from "../../features/dashboard/Dashboard";
 import { ContentMachine } from "../../features/content/ContentMachine";
-import { PreviewStudio } from "../../features/preview/PreviewStudio";
 import { MoneyTracker } from "../../features/money/MoneyTracker";
 import { VitaPersonale } from "../../features/life/VitaPersonale";
 import { BrandDeals } from "../../features/brands/BrandDeals";
-import { Settings } from "../../features/settings/Settings";
 import { useAuth } from "../../context/AuthContext";
 import { useApp } from "../../context/AppContext";
 import { Navigate } from "react-router-dom";
@@ -24,7 +22,6 @@ export function AppLayout() {
   const { state } = useApp();
   const [activeTab, setActiveTab] = useState<TabId>("dashboard");
 
-  // Start reminder scheduler
   useEffect(() => {
     requestNotificationPermission();
     startReminderScheduler(() => state.reminders ?? []);
@@ -41,8 +38,10 @@ export function AppLayout() {
           justifyContent: "center",
         }}
       >
-        <div style={{ textAlign: "center" }}>
-          <div className="animate-glow animate-float" style={{ fontSize: 32, marginBottom: 12 }}>⚡</div>
+        <div style={{ textAlign: "center" }} role="status" aria-live="polite">
+          <div className="animate-glow animate-float" style={{ fontSize: 32, marginBottom: 12 }} aria-hidden="true">
+            ⚡
+          </div>
           <div style={{ fontSize: 14, color: "rgba(255,255,255,0.5)" }}>
             Apertura ecosistema...
           </div>
@@ -51,7 +50,6 @@ export function AppLayout() {
     );
   }
 
-  // Redirect to login if user is missing
   if (isConfigured && !user) {
     return <Navigate to="/login" replace />;
   }
@@ -62,16 +60,12 @@ export function AppLayout() {
         return <Dashboard />;
       case "content":
         return <ContentMachine />;
-      case "preview":
-        return <PreviewStudio />;
       case "money":
         return <MoneyTracker />;
       case "life":
         return <VitaPersonale />;
       case "brands":
         return <BrandDeals />;
-      case "settings":
-        return <Settings />;
       default:
         return <Dashboard />;
     }
@@ -79,18 +73,12 @@ export function AppLayout() {
 
   return (
     <div>
-      <div
-        style={{
-          padding: "20px 20px 0",
-          borderBottom: "1px solid var(--glass-border)",
-          background: "rgba(0,0,0,0.2)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-        }}
-      >
+      {/* Skip link */}
+      <a href="#app-content" className="skip-link">
+        Vai al contenuto principale
+      </a>
+
+      <header className="app-header">
         <div
           style={{
             display: "flex",
@@ -108,24 +96,10 @@ export function AppLayout() {
                 marginTop: 4,
               }}
             >
-              <div 
-                className="animate-glow"
-                style={{
-                  background: "var(--accent-gradient)",
-                  color: "#000",
-                  padding: "4px 10px",
-                  borderRadius: 12,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  marginRight: 4
-                }}
-              >
-                🚀 14 gg Rimasti
-              </div>
               <span
                 style={{
                   fontSize: 11,
-                  color: "rgba(255,255,255,0.35)",
+                  color: "rgba(255,255,255,0.5)",
                   maxWidth: 140,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -137,7 +111,8 @@ export function AppLayout() {
               <button
                 onClick={signOut}
                 className="premium-btn secondary"
-                style={{ padding: "4px 10px", fontSize: 11 }}
+                style={{ padding: "6px 12px", fontSize: 12 }}
+                aria-label="Esci dall'account"
               >
                 Esci
               </button>
@@ -145,11 +120,16 @@ export function AppLayout() {
           )}
         </div>
         <TabNav active={activeTab} onChange={setActiveTab} />
-      </div>
+      </header>
 
-      <div style={{ padding: "40px 20px", maxWidth: 1000, margin: "0 auto" }}>
+      <main
+        id="app-content"
+        className="app-content"
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+      >
         {renderContent()}
-      </div>
+      </main>
 
       <Footer />
     </div>

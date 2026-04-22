@@ -20,12 +20,14 @@ export interface MoneyEntry {
   source: string;
   amount: number;
   type: string;
+  date?: string;
 }
 
 export interface MoneyExpense {
   item: string;
   amount: number;
   category: string;
+  date?: string;
 }
 
 export interface Habit {
@@ -67,6 +69,10 @@ export interface Reminder {
   enabled: boolean;
 }
 
+export interface SettingsState {
+  theme: "cyan" | "orange" | "purple" | "green";
+}
+
 export interface AppState {
   content: ContentItem[];
   entrate: MoneyEntry[];
@@ -76,4 +82,5 @@ export interface AppState {
   goals: Goal[];
   journal: JournalEntry[];
   reminders: Reminder[];
+  settings: SettingsState;
 }

@@ -1,4 +1,4 @@
-export type TabId = "dashboard" | "content" | "money" | "life" | "brands";
+export type TabId = "dashboard" | "content" | "money" | "life" | "brands" | "preview" | "settings";
 
 interface Tab {
   id: TabId;
@@ -8,9 +8,11 @@ interface Tab {
 export const TABS: Tab[] = [
   { id: "dashboard", label: "🏠 Dashboard" },
   { id: "content", label: "🎬 Content Machine" },
+  { id: "preview", label: "📱 Preview Studio" },
   { id: "money", label: "💰 Money Tracker" },
   { id: "life", label: "🧘 Vita Personale" },
   { id: "brands", label: "🤝 Brand Deals" },
+  { id: "settings", label: "⚙️ Impostazioni" },
 ];
 
 interface TabNavProps {

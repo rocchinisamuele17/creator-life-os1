@@ -118,7 +118,7 @@ export function LandingPage() {
                   border: "none",
                 }}
               >
-                Inizia Ora Gratis 🚀
+                Inizia Prova Gratuita (14 gg) 🚀
               </button>
             </Link>
             <a href="#features" style={{ textDecoration: "none" }}>
@@ -233,7 +233,7 @@ export function LandingPage() {
 
               {/* Piano Pro */}
               <div className="glass-panel" style={{ flex: "1", minWidth: 300, maxWidth: 400, padding: 40, display: "flex", flexDirection: "column", textAlign: "left", borderColor: "var(--accent-color)", position: "relative" }}>
-                <div style={{ position: "absolute", top: -12, right: 30, background: "var(--accent-gradient)", color: "#000", padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700 }}>PIÙ POPOLARE</div>
+                <div style={{ position: "absolute", top: -12, right: 30, background: "var(--accent-gradient)", color: "#000", padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700 }}>14 GIORNI DI PROVA</div>
                 <h3 style={{ fontSize: 24, margin: "0 0 10px", color: "var(--accent-color)" }}>Pro</h3>
                 <p style={{ color: "var(--text-secondary)", margin: "0 0 24px" }}>Per i Creator che fatturano e scalano.</p>
                 <div style={{ fontSize: 48, fontWeight: 800, marginBottom: 30 }}>€15<span style={{ fontSize: 16, color: "var(--text-secondary)", fontWeight: 500 }}>/mese</span></div>
@@ -244,7 +244,7 @@ export function LandingPage() {
                   <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Esportazioni PDF/CSV illimitate</span></li>
                 </ul>
                 <Link to="/login" style={{ textDecoration: "none" }}>
-                  <button className="premium-btn" style={{ width: "100%", padding: 16, fontSize: 16, borderRadius: 12, background: "var(--accent-gradient)", color: "#000", border: "none", fontWeight: 700 }}>Passa a Pro</button>
+                  <button className="premium-btn" style={{ width: "100%", padding: 16, fontSize: 16, borderRadius: 12, background: "var(--accent-gradient)", color: "#000", border: "none", fontWeight: 700 }}>Inizia Ora</button>
                 </Link>
               </div>
             </div>

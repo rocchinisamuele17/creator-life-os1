@@ -9,7 +9,6 @@ import {
   exportBrandsCSV,
   exportAllPDF,
 } from "../../lib/export";
-import { LineChart, Line, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 const INITIAL_ACTIONS = [
   "Finire script: 'Come ho perso 3 clienti'",
@@ -80,17 +79,18 @@ export function Dashboard() {
     }));
   };
 
-
-
   return (
     <div>
-      <div style={{ marginBottom: 32 }}>
-        <h2 className="text-gradient animate-float" style={{ fontSize: 32, fontWeight: 800, margin: 0, paddingBottom: 4 }}>
+      <div style={{ marginBottom: 28 }}>
+        <h2
+          className="text-gradient"
+          style={{ fontSize: "clamp(24px, 6vw, 32px)", fontWeight: 800, margin: 0, paddingBottom: 4 }}
+        >
           Buongiorno, Creator 👋
         </h2>
         <p
           style={{
-            color: "rgba(255,255,255,0.4)",
+            color: "rgba(255,255,255,0.5)",
             fontSize: 13,
             margin: "4px 0 0",
           }}
@@ -99,14 +99,8 @@ export function Dashboard() {
         </p>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          marginBottom: 24,
-        }}
-      >
+      {/* Stat cards */}
+      <div className="stat-grid">
         <StatCard
           label="Entrate Mese"
           value={`€${totalEntrate.toLocaleString()}`}
@@ -133,63 +127,19 @@ export function Dashboard() {
         />
       </div>
 
-      {/* Grafico Crescita */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: 24,
-          marginBottom: 24,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "rgba(255,255,255,0.7)",
-            marginBottom: 14,
-          }}
-        >
-          📈 Tracciamento Crescita (Mese)
-        </div>
-        <div style={{ width: "100%", height: 200 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={[
-              { name: 'Sett 1', followers: 4000, views: 2400 },
-              { name: 'Sett 2', followers: 4200, views: 3100 },
-              { name: 'Sett 3', followers: 4800, views: 5200 },
-              { name: 'Sett 4', followers: 5900, views: 8400 },
-            ]}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-              <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" fontSize={12} tickLine={false} axisLine={false} />
-              <RechartsTooltip 
-                contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: 8, color: '#fff' }}
-                itemStyle={{ color: '#fff' }}
-              />
-              <Line type="monotone" dataKey="views" stroke="var(--accent-color)" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
-              <Line type="monotone" dataKey="followers" stroke="#10b981" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
       {/* Obiettivi */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: 24,
-          marginBottom: 24,
-        }}
-      >
-        <div
+      <div className="glass-panel" style={{ padding: 20, marginBottom: 20 }}>
+        <h3
           style={{
             fontSize: 13,
             fontWeight: 600,
             color: "rgba(255,255,255,0.7)",
             marginBottom: 14,
+            margin: "0 0 14px",
           }}
         >
           🎯 Obiettivi Q2 2026
-        </div>
+        </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {state.goals.map((g, i) => (
             <div key={i}>
@@ -205,15 +155,21 @@ export function Dashboard() {
                 </span>
                 <span
                   style={{ fontSize: 12, fontWeight: 600, color: "#f97316" }}
+                  aria-live="polite"
                 >
                   {g.progress}%
                 </span>
               </div>
               <ProgressBar value={g.progress} />
+              <label className="sr-only" htmlFor={`goal-${i}`}>
+                Progresso: {g.goal}
+              </label>
               <input
+                id={`goal-${i}`}
                 type="range"
                 min={0}
                 max={100}
+                step={1}
                 value={g.progress}
                 onChange={(e) =>
                   updateGoalProgress(i, parseInt(e.target.value))
@@ -226,6 +182,7 @@ export function Dashboard() {
                   cursor: "pointer",
                   opacity: 0.6,
                 }}
+                aria-label={`${g.goal}: ${g.progress}%`}
               />
             </div>
           ))}
@@ -233,86 +190,87 @@ export function Dashboard() {
       </div>
 
       {/* Azioni */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: 24,
-          marginBottom: 24,
-        }}
-      >
-        <div
+      <div className="glass-panel" style={{ padding: 20, marginBottom: 20 }}>
+        <h3
           style={{
             fontSize: 13,
             fontWeight: 600,
             color: "rgba(255,255,255,0.7)",
-            marginBottom: 12,
+            margin: "0 0 12px",
           }}
         >
           ⚡ Prossime Azioni
-        </div>
-        {INITIAL_ACTIONS.map((action, i) => {
-          const checked = checkedActions.has(i);
-          return (
-            <div
-              key={i}
-              onClick={() => toggleAction(i)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 0",
-                borderBottom:
-                  i < INITIAL_ACTIONS.length - 1
-                    ? "1px solid rgba(255,255,255,0.05)"
-                    : "none",
-                cursor: "pointer",
-              }}
-            >
+        </h3>
+        <div role="group" aria-label="Lista azioni">
+          {INITIAL_ACTIONS.map((action, i) => {
+            const checked = checkedActions.has(i);
+            return (
               <div
+                key={i}
+                role="checkbox"
+                aria-checked={checked}
+                tabIndex={0}
+                onClick={() => toggleAction(i)}
+                onKeyDown={(e) => {
+                  if (e.key === " " || e.key === "Enter") {
+                    e.preventDefault();
+                    toggleAction(i);
+                  }
+                }}
                 style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: 4,
-                  border: checked
-                    ? "2px solid #f97316"
-                    : "2px solid rgba(255,255,255,0.2)",
-                  background: checked ? "#f9731622" : "transparent",
-                  flexShrink: 0,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 11,
-                  color: checked ? "#f97316" : "transparent",
-                  transition: "all 0.15s ease",
+                  gap: 10,
+                  padding: "10px 0",
+                  borderBottom:
+                    i < INITIAL_ACTIONS.length - 1
+                      ? "1px solid rgba(255,255,255,0.05)"
+                      : "none",
+                  cursor: "pointer",
+                  minHeight: 44,
                 }}
               >
-                ✓
+                <div
+                  aria-hidden="true"
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 6,
+                    border: checked
+                      ? "2px solid #f97316"
+                      : "2px solid rgba(255,255,255,0.2)",
+                    background: checked ? "#f9731622" : "transparent",
+                    flexShrink: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 12,
+                    color: checked ? "#f97316" : "transparent",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  ✓
+                </div>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: checked
+                      ? "rgba(255,255,255,0.3)"
+                      : "rgba(255,255,255,0.7)",
+                    textDecoration: checked ? "line-through" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {action}
+                </span>
               </div>
-              <span
-                style={{
-                  fontSize: 13,
-                  color: checked
-                    ? "rgba(255,255,255,0.3)"
-                    : "rgba(255,255,255,0.7)",
-                  textDecoration: checked ? "line-through" : "none",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {action}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Reminder */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: 24,
-          marginBottom: 24,
-        }}
-      >
+      <div className="glass-panel" style={{ padding: 20, marginBottom: 20 }}>
         <div
           style={{
             display: "flex",
@@ -321,12 +279,14 @@ export function Dashboard() {
             marginBottom: 12,
           }}
         >
-          <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>
+          <h3 style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)", margin: 0 }}>
             🔔 Reminder
-          </div>
+          </h3>
           <button
             onClick={() => setShowReminders(!showReminders)}
             className="premium-btn secondary"
+            aria-expanded={showReminders}
+            aria-controls="reminder-form"
           >
             {showReminders ? "Chiudi" : "+ Nuovo"}
           </button>
@@ -334,6 +294,7 @@ export function Dashboard() {
 
         {showReminders && (
           <div
+            id="reminder-form"
             style={{
               display: "flex",
               gap: 8,
@@ -345,39 +306,42 @@ export function Dashboard() {
               label="Testo"
               value={newReminder.text}
               onChange={(e) =>
-                setNewReminder({ ...newReminder, text: e.target.value })
+                setNewReminder({ ...newReminder, text: (e.target as HTMLInputElement).value })
               }
               placeholder="Es. Pubblica reel"
               onKeyDown={(e) => e.key === "Enter" && addReminder()}
             />
             <div style={{ minWidth: 80 }}>
               <label
+                htmlFor="reminder-time"
                 style={{
                   fontSize: 11,
-                  color: "rgba(255,255,255,0.45)",
+                  color: "rgba(255,255,255,0.55)",
                   textTransform: "uppercase",
                   letterSpacing: 0.8,
                   marginBottom: 4,
                   display: "block",
+                  fontWeight: 600,
                 }}
               >
                 Ora
               </label>
               <input
+                id="reminder-time"
                 type="time"
                 value={newReminder.time}
                 onChange={(e) =>
                   setNewReminder({ ...newReminder, time: e.target.value })
                 }
                 style={{
-                  padding: "8px 12px",
+                  padding: "10px 12px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.12)",
                   background: "rgba(255,255,255,0.06)",
                   color: "#fff",
-                  fontSize: 13,
+                  fontSize: 14,
                   fontFamily: "inherit",
-                  outline: "none",
+                  minHeight: 44,
                 }}
               />
             </div>
@@ -385,15 +349,16 @@ export function Dashboard() {
               <button
                 onClick={addReminder}
                 style={{
-                  padding: "8px 16px",
+                  padding: "10px 18px",
                   borderRadius: 8,
                   border: "none",
                   background: "#f97316",
                   color: "#fff",
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: 600,
                   cursor: "pointer",
                   fontFamily: "inherit",
+                  minHeight: 44,
                 }}
               >
                 Aggiungi
@@ -402,94 +367,97 @@ export function Dashboard() {
           </div>
         )}
 
-        {(state.reminders ?? []).map((r) => (
-          <div
-            key={r.id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "6px 0",
-              borderBottom: "1px solid rgba(255,255,255,0.04)",
-            }}
-          >
+        <div role="list" aria-label="Lista promemoria">
+          {(state.reminders ?? []).map((r) => (
             <div
-              onClick={() => toggleReminder(r.id)}
+              key={r.id}
+              role="listitem"
               style={{
-                width: 18,
-                height: 18,
-                borderRadius: 4,
-                border: r.enabled
-                  ? "2px solid #10b981"
-                  : "2px solid rgba(255,255,255,0.15)",
-                background: r.enabled ? "#10b98122" : "transparent",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                fontSize: 11,
-                color: r.enabled ? "#10b981" : "transparent",
-                cursor: "pointer",
-                flexShrink: 0,
+                gap: 10,
+                padding: "8px 0",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
+                minHeight: 44,
               }}
             >
-              ✓
+              <div
+                role="checkbox"
+                aria-checked={r.enabled}
+                aria-label={`${r.enabled ? "Disattiva" : "Attiva"} promemoria: ${r.text}`}
+                tabIndex={0}
+                onClick={() => toggleReminder(r.id)}
+                onKeyDown={(e) => {
+                  if (e.key === " " || e.key === "Enter") {
+                    e.preventDefault();
+                    toggleReminder(r.id);
+                  }
+                }}
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: 6,
+                  border: r.enabled
+                    ? "2px solid #10b981"
+                    : "2px solid rgba(255,255,255,0.15)",
+                  background: r.enabled ? "#10b98122" : "transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 12,
+                  color: r.enabled ? "#10b981" : "transparent",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+              >
+                ✓
+              </div>
+              <span
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#f97316",
+                  minWidth: 42,
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                {r.time}
+              </span>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: r.enabled
+                    ? "rgba(255,255,255,0.6)"
+                    : "rgba(255,255,255,0.3)",
+                  flex: 1,
+                }}
+              >
+                {r.text}
+              </span>
+              <button
+                onClick={() => deleteReminder(r.id)}
+                className="delete-btn"
+                aria-label={`Elimina promemoria: ${r.text}`}
+              >
+                ×
+              </button>
             </div>
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "#f97316",
-                minWidth: 42,
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {r.time}
-            </span>
-            <span
-              style={{
-                fontSize: 12,
-                color: r.enabled
-                  ? "rgba(255,255,255,0.6)"
-                  : "rgba(255,255,255,0.25)",
-                flex: 1,
-              }}
-            >
-              {r.text}
-            </span>
-            <button
-              onClick={() => deleteReminder(r.id)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "rgba(255,255,255,0.2)",
-                cursor: "pointer",
-                fontSize: 14,
-                padding: "2px 4px",
-              }}
-            >
-              ×
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Export */}
-      <div
-        className="glass-panel"
-        style={{
-          padding: 24,
-        }}
-      >
-        <div
+      <div className="glass-panel" style={{ padding: 20 }}>
+        <h3
           style={{
             fontSize: 13,
             fontWeight: 600,
             color: "rgba(255,255,255,0.7)",
-            marginBottom: 12,
+            margin: "0 0 12px",
           }}
         >
           📤 Esporta Dati
-        </div>
+        </h3>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <button onClick={() => exportAllPDF(state)} className="premium-btn secondary">
             📄 Report PDF

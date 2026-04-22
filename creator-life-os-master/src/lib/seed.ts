@@ -48,4 +48,7 @@ export const SEED_STATE: AppState = {
     { id: 2, text: "Check analytics", time: "18:00", enabled: true },
     { id: 3, text: "Review settimanale", time: "18:00", enabled: false },
   ],
+  settings: {
+    theme: "cyan"
+  }
 };
