@@ -172,6 +172,7 @@ export function LandingPage() {
             <h2 className="text-gradient" style={{ textAlign: "center", fontSize: 40, marginBottom: 60 }}>
               Il Tuo Nuovo Ecosistema Pro
             </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 30 }}>
               <div className="glass-card" style={{ padding: 30 }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>📱</div>
                 <h3 style={{ fontSize: 20, marginBottom: 12 }}>Preview Studio Avanzato</h3>
