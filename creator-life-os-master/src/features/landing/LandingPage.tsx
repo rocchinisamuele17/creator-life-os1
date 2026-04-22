@@ -170,35 +170,34 @@ export function LandingPage() {
         <section id="features" style={{ padding: "80px 20px", background: "rgba(0,0,0,0.5)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
             <h2 className="text-gradient" style={{ textAlign: "center", fontSize: 40, marginBottom: 60 }}>
-              Perché scegliere Creator Life OS?
+              Il Tuo Nuovo Ecosistema Pro
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 30 }}>
               <div className="glass-card" style={{ padding: 30 }}>
-                <div style={{ fontSize: 32, marginBottom: 16 }}>🎬</div>
-                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Content Machine</h3>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>📱</div>
+                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Preview Studio Avanzato</h3>
                 <p style={{ color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Traccia le tue idee, copioni e lo stato di pubblicazione dei tuoi contenuti su tutte le piattaforme.
+                  Testa i tuoi contenuti visivi in un simulatore interattivo di smartphone per Instagram, TikTok e YouTube.
                 </p>
               </div>
               <div className="glass-card" style={{ padding: 30 }}>
-                <div style={{ fontSize: 32, marginBottom: 16 }}>💰</div>
-                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Money Tracker</h3>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>📊</div>
+                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Money Tracker & Grafici</h3>
                 <p style={{ color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Monitora ogni centesimo, dalle entrate pubblicitarie alle spese per l'attrezzatura, sempre sotto controllo.
+                  Statistiche, Line Chart di Simulazione Crescita e Grafici a Torta interattivi. Analizza dove entrano i soldi.
                 </p>
               </div>
               <div className="glass-card" style={{ padding: 30 }}>
-                <div style={{ fontSize: 32, marginBottom: 16 }}>🤝</div>
-                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Gestione Brand</h3>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>⏰</div>
+                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Routine Personalizzabile</h3>
                 <p style={{ color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Salva i contatti aziendali, tieni d'occhio lo status delle trattative e le scadenze delle fatture.
+                  Crea da zero i tuoi slot giornalieri con il calendario dinamicamente ordinato al millesimo di secondo.
                 </p>
               </div>
               <div className="glass-card" style={{ padding: 30 }}>
-                <div style={{ fontSize: 32, marginBottom: 16 }}>☁️</div>
-                <h3 style={{ fontSize: 20, marginBottom: 12 }}>Salvataggio Sicuro</h3>
+                <div style={{ fontSize: 32, marginBottom: 16 }}>🎨</div>
+                <h3 style={{ fontSize: 20, marginBottom: 12 }}>God-Mode Theme</h3>
                 <p style={{ color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Il tuo ecosistema si sincronizza immediatamente su cloud. Nessun rischio di perdere i tuoi preziosi dati creativi. 
+                  Non il solito noioso dark-theme. Switcha live tra atmosfere Ciano, Arancio Cyber, Matrix e Haze Galattico.
                 </p>
               </div>
             </div>
@@ -233,18 +232,18 @@ export function LandingPage() {
 
               {/* Piano Pro */}
               <div className="glass-panel" style={{ flex: "1", minWidth: 300, maxWidth: 400, padding: 40, display: "flex", flexDirection: "column", textAlign: "left", borderColor: "var(--accent-color)", position: "relative" }}>
-                <div style={{ position: "absolute", top: -12, right: 30, background: "var(--accent-gradient)", color: "#000", padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 700 }}>14 GIORNI DI PROVA</div>
+                <div className="animate-glow" style={{ position: "absolute", top: -12, right: 30, background: "var(--accent-gradient)", color: "#000", padding: "4px 12px", borderRadius: 20, fontSize: 12, fontWeight: 800, border: "2px solid #000" }}>PROVA GRATUITA 14 GIORNI!</div>
                 <h3 style={{ fontSize: 24, margin: "0 0 10px", color: "var(--accent-color)" }}>Pro</h3>
-                <p style={{ color: "var(--text-secondary)", margin: "0 0 24px" }}>Per i Creator che fatturano e scalano.</p>
-                <div style={{ fontSize: 48, fontWeight: 800, marginBottom: 30 }}>€15<span style={{ fontSize: 16, color: "var(--text-secondary)", fontWeight: 500 }}>/mese</span></div>
+                <p style={{ color: "var(--text-secondary)", margin: "0 0 24px" }}>Per i Creator che fatturano e scalano col turbo.</p>
+                <div style={{ fontSize: 48, fontWeight: 800, marginBottom: 30 }}>€5<span style={{ fontSize: 16, color: "var(--text-secondary)", fontWeight: 500 }}>/mese</span></div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 30px", flex: 1 }}>
-                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Contenuti illimitati</span></li>
-                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Bilancio Entrate/Uscite illimitato</span></li>
-                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Gestione Brand Deals completa</span></li>
-                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Esportazioni PDF/CSV illimitate</span></li>
+                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Accesso completo a tutti i grafici</span></li>
+                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Simulatore Preview Studio</span></li>
+                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Personalizzazione colori estrema</span></li>
+                  <li style={{ marginBottom: 12, display: "flex", gap: 10 }}><span>⚡</span> <span>Nessun limite sulle entry al DB</span></li>
                 </ul>
                 <Link to="/login" style={{ textDecoration: "none" }}>
-                  <button className="premium-btn" style={{ width: "100%", padding: 16, fontSize: 16, borderRadius: 12, background: "var(--accent-gradient)", color: "#000", border: "none", fontWeight: 700 }}>Inizia Ora</button>
+                  <button className="premium-btn" style={{ width: "100%", padding: 16, fontSize: 16, borderRadius: 12, background: "var(--accent-gradient)", color: "#000", border: "none", fontWeight: 700 }}>Riscatta Prova Gratuita</button>
                 </Link>
               </div>
             </div>
