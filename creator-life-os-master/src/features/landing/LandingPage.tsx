@@ -97,12 +97,46 @@ export function LandingPage() {
               fontSize: 20,
               color: "rgba(255,255,255,0.6)",
               maxWidth: 600,
-              margin: "0 auto",
               lineHeight: 1.6,
             }}
           >
             Gestisci video, entrate, accordi con i brand e le tue abitudini di vita. Tutto in un'unica piattaforma fluida, veloce e sincronizzata nel cloud.
           </p>
+
+          {/* Hero Video Showcase - Cinematic Style */}
+          <div
+            className="glass-panel"
+            style={{
+              width: "100%",
+              maxWidth: 800,
+              marginTop: 20,
+              position: "relative",
+              overflow: "hidden",
+              padding: 0,
+              border: "1px solid rgba(0, 240, 255, 0.2)",
+              boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0,240,255,0.1)",
+              borderRadius: 20,
+            }}
+          >
+            <video
+              src="/hero-video.mp4#t=0,10"
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                position: "relative",
+                zIndex: 1,
+              }}
+            />
+            {/* Cinematic Overlays */}
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)", zIndex: 2, pointerEvents: "none" }} />
+            <div className="animate-glow" style={{ position: "absolute", bottom: 20, right: 20, padding: "4px 12px", background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", borderRadius: 20, fontSize: 10, color: "var(--accent-color)", zIndex: 3, border: "1px solid var(--accent-color)" }}>PRO KERNEL V1.0</div>
+          </div>
+
           <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
             <Link to="/login" style={{ textDecoration: "none" }}>
               <button
@@ -128,44 +162,6 @@ export function LandingPage() {
             </a>
           </div>
         </section>
-
-        {/* Dashboard Mockup Showcase */}
-        <section style={{ padding: "0 20px 100px", display: "flex", justifyContent: "center" }}>
-          <div
-            className="glass-panel"
-            style={{
-              width: "100%",
-              maxWidth: 1000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              overflow: "hidden",
-              padding: 0,
-            }}
-          >
-            <video
-              src="/demo-video.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              controls
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                position: "relative",
-                zIndex: 1,
-              }}
-            />
-            
-            {/* Elementi decorativi sfocati nel mockup */}
-            <div style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, background: "#7000ff", filter: "blur(100px)", opacity: 0.3 }} />
-            <div style={{ position: "absolute", bottom: -50, left: -50, width: 200, height: 200, background: "#00f0ff", filter: "blur(100px)", opacity: 0.3 }} />
-          </div>
-        </section>
-
         {/* Features Section */}
         <section id="features" style={{ padding: "80px 20px", background: "rgba(0,0,0,0.5)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
