@@ -7,6 +7,50 @@ export function PreviewStudio() {
   const [mediaUrl, setMediaUrl] = useState("https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop");
   const [caption, setCaption] = useState("Questo è un test per il mio prossimo post virale! 🚀 Segui per altri contenuti ✨ #creator #lifeos");
   const [username, setUsername] = useState("creator_pro");
+  const [isMediaVideo, setIsMediaVideo] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setMediaUrl(url);
+      setIsMediaVideo(file.type.startsWith("video/"));
+    }
+  };
+
+  const handleUrlChange = (url: string) => {
+    setMediaUrl(url);
+    // Controllo basico per video
+    setIsMediaVideo(url.match(/\.(mp4|webm|ogg|mov)/i) !== null);
+  };
+
+  const renderMedia = (platformStyle: React.CSSProperties) => {
+    if (isMediaVideo) {
+      return (
+        <video 
+          key={mediaUrl}
+          src={mediaUrl} 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          style={{ width: "100%", height: "100%", objectFit: "cover", ...platformStyle }} 
+        />
+      );
+    }
+    return (
+      <img 
+        src={mediaUrl} 
+        alt="Preview" 
+        style={{ width: "100%", height: "100%", objectFit: "cover", ...platformStyle }} 
+        onError={(e) => {
+          if (!mediaUrl.includes("via.placeholder.com")) {
+             e.currentTarget.src = "https://via.placeholder.com/400x400?text=Link+Non+Valido";
+          }
+        }} 
+      />
+    );
+  };
 
   return (
     <div>
@@ -49,6 +93,32 @@ export function PreviewStudio() {
           <div className="glass-panel" style={{ padding: 24 }}>
             <h3 style={{ fontSize: 16, marginBottom: 16 }}>2. Contenuti</h3>
             
+            <label style={{ display: "block", marginBottom: 16 }}>
+              <span style={{ fontSize: 13, color: "var(--accent-color)", display: "block", marginBottom: 8, fontWeight: 600 }}>Carica il tuo file (Foto o Video)</span>
+              <div style={{ position: "relative" }}>
+                 <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleFileChange}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "2px dashed rgba(255,255,255,0.2)",
+                    borderRadius: 12,
+                    color: "#fff",
+                    cursor: "pointer"
+                  }}
+                />
+              </div>
+            </label>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "20px 0" }}>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
+              <span style={{ fontSize: 10, color: "var(--text-secondary)" }}>OPPURE USA UN LINK</span>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }} />
+            </div>
+
             <label style={{ display: "block", marginBottom: 12 }}>
               <span style={{ fontSize: 12, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Nome Utente</span>
               <input
@@ -70,9 +140,9 @@ export function PreviewStudio() {
               <span style={{ fontSize: 12, color: "var(--text-secondary)", display: "block", marginBottom: 6 }}>Immagine/Video URL</span>
               <input
                 type="text"
-                value={mediaUrl}
-                onChange={e => setMediaUrl(e.target.value)}
-                placeholder="Incolla link immagine"
+                value={mediaUrl.startsWith("blob:") ? "" : mediaUrl}
+                onChange={e => handleUrlChange(e.target.value)}
+                placeholder="Incolla link diretto (es. .jpg, .mp4)"
                 style={{
                   width: "100%",
                   padding: 12,
@@ -135,7 +205,7 @@ export function PreviewStudio() {
                 </div>
                 {/* IG Media */}
                 <div style={{ width: "100%", height: 350, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                  <img src={mediaUrl} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => e.currentTarget.src = "https://via.placeholder.com/400x400?text=Invalid+Image"} />
+                  {renderMedia({})}
                 </div>
                 {/* IG Actions & Text */}
                 <div style={{ padding: 14 }}>
@@ -153,7 +223,7 @@ export function PreviewStudio() {
 
             {platform === "tiktok" && (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#000", color: "#fff", position: "relative" }}>
-                 <img src={mediaUrl} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.8 }} onError={(e) => e.currentTarget.src = "https://via.placeholder.com/400x800?text=Invalid+Image"} />
+                 {renderMedia({ opacity: 0.8 })}
                  {/* UI Overlay */}
                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, background: "linear-gradient(transparent, rgba(0,0,0,0.8))" }}>
                     <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>@{username}</div>
@@ -176,7 +246,7 @@ export function PreviewStudio() {
               <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#0f0f0f", color: "#fff", paddingTop: 40 }}>
                 {/* Video Area */}
                 <div style={{ width: "100%", height: 200, background: "#000", position: "relative" }}>
-                  <img src={mediaUrl} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => e.currentTarget.src = "https://via.placeholder.com/400x225?text=Invalid+Image"} />
+                  {renderMedia({})}
                   <div style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,0.8)", padding: "2px 6px", borderRadius: 4, fontSize: 12 }}>12:04</div>
                 </div>
                 {/* Meta */}
